@@ -24,7 +24,9 @@
 
 CMakeFiles
 
+GameEngine.VC.*
 GlEngine.dir
+GlEngineMain.dir
 *.vcxproj*
 ALL_BUILD.*
 ZERO_CHECK.*
@@ -33,3 +35,6 @@ CMakeCache.txt
 OpenGLTuto.*
 .vs
 Project/resource.h
+
+Debug
+Release
