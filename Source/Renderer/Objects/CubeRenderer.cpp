@@ -6,12 +6,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Renderer/LightsManager.hpp"
-#include "Renderer/Shader.hpp"
-#include "Renderer/TextureManager.hpp"
+#include "Resources/Shader.hpp"
+#include "Resources/TextureManager.hpp"
 #include "Camera/CameraFps.hpp"
 
 CubeRenderer::CubeRenderer(const std::shared_ptr<Shader>& shader, const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
-	: Object(shader, pos, size, color)
+	: SceneElement(shader, pos, size, color)
 {
 	
 }

@@ -1,4 +1,4 @@
-#include "Renderer/TextureManager.hpp"
+#include "Resources/TextureManager.hpp"
 #include <iostream>
 #include <SOIL.h>
 #include "GL\glew.h"

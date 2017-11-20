@@ -3,7 +3,7 @@
 #include <memory>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Renderer/Shader.hpp"
+#include "Resources/Shader.hpp"
 #include <vector>
 class LightsManager;
 class ObjectsManager;
@@ -23,10 +23,10 @@ public:
 	};
 	explicit Renderer(const std::shared_ptr<Camera>& camera, const std::shared_ptr<TextureManager> &textureManager);
 	
-	void addModel(const char *path, const glm::vec3 &pos, const glm::vec3 &size = glm::vec3(1.0f));
+/*	void addModel(const char *path, const glm::vec3 &pos, const glm::vec3 &size = glm::vec3(1.0f));
 	void addObject(const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3 &color = glm::vec3(1.f));
 	void addLight(const std::shared_ptr<PointLight>& obj);
-	void addLight(const std::shared_ptr<DirectionLight>& obj);
+	void addLight(const std::shared_ptr<DirectionLight>& obj);*/
 	void update();
 	void draw();
 	float x = 0.f;
@@ -38,7 +38,7 @@ private:
 	std::shared_ptr<TextureManager> _textureManager = nullptr;
 
 	std::shared_ptr<LightsManager> _lightsManager = nullptr;
-	std::shared_ptr<ObjectsManager> _objectsManager = nullptr;
+	//std::shared_ptr<ObjectsManager> _objectsManager = nullptr;
 
 	
 	

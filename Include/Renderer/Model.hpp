@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 
-#include "Shader.hpp"
+#include "Resources/Shader.hpp"
 typedef int GLint;
 typedef unsigned int GLuint;
 #include "Mesh.hpp"

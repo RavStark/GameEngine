@@ -5,10 +5,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Renderer/Shader.hpp"
+#include "Resources/Shader.hpp"
 
 PlaneRenderer::PlaneRenderer(const std::shared_ptr<Shader>& shader, const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
-	:Object(shader, pos, size, color)
+	:SceneElement(shader, pos, size, color)
 {
 	
 }

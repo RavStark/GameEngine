@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include <glm/glm.hpp>
-#include "Shader.hpp"
+#include "Resources/Shader.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

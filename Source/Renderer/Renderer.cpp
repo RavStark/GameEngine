@@ -1,12 +1,11 @@
 #include <string>
 #include "Renderer/Renderer.hpp"
 #include "Renderer/LightsManager.hpp"
-#include "Renderer/ObjectsManager.hpp"
 #include "Renderer/Objects/CubeRenderer.hpp"
 #include "Renderer/ModelRenderer.hpp"
 #include "Renderer/Lights/PointLight.hpp"
 #include "Camera/CameraFps.hpp"
-#include "Renderer/Shader.hpp"
+#include "Resources/Shader.hpp"
 #include "Renderer/Model.hpp"
 
 #include <iostream>
@@ -18,13 +17,14 @@ Renderer::Renderer(const std::shared_ptr<Camera>& camera, const std::shared_ptr<
 	: _camera(camera), _textureManager(textureManager)
 {
 	_lightsManager = std::make_shared<LightsManager>();
-	_objectsManager = std::make_shared<ObjectsManager>(_camera, _textureManager);
-	_simpleModelShader = std::make_shared<Shader>("./Project/Shaders/model.vs", "./Project/Shaders/model.frag");
-	_simpleShader = std::make_shared<Shader>("./Project/Shaders/Color.vs", "./Project/Shaders/Color.frag");
-	_multipleLightingShader = std::make_shared<Shader>("./Project/Shaders/MultipleLighting.vs", "./Project/Shaders/MultipleLighting.frag");
+	//_objectsManager = std::make_shared<ObjectsManager>(_camera, _textureManager);
+	_simpleModelShader = std::make_shared<Shader>("./Shaders/model.vs", "./Shaders/model.frag");
+	_simpleShader = std::make_shared<Shader>("./Shaders/Color.vs", "./Shaders/Color.frag");
+	_multipleLightingShader = std::make_shared<Shader>("./Shaders/MultipleLighting.vs", "./Shaders/MultipleLighting.frag");
 	
 }
 
+/*** OBSOLETE 
 void Renderer::addModel(const char *path, const glm::vec3 &pos, const glm::vec3 &size)
 {
 	try
@@ -62,7 +62,7 @@ void Renderer::addLight(const std::shared_ptr<PointLight>& obj)
 void Renderer::addLight(const std::shared_ptr<DirectionLight>& obj)
 {
 	_lightsManager->addLight(obj);
-}
+}***/
 
 void Renderer::update()
 {
@@ -71,7 +71,7 @@ void Renderer::update()
 #include <iostream>
 void Renderer::draw()
 {
-	for (auto model : _models)
+	/*for (auto model : _models)
 		model->draw(_textureManager, _camera);
 
 	_multipleLightingShader->use();
@@ -104,5 +104,5 @@ void Renderer::draw()
 	_simpleShader->setVec3("light.ambient", (*_lightsManager->getPointLights().begin())->getAmbient());
 	_simpleShader->setVec3("light.diffuse", (*_lightsManager->getPointLights().begin())->getDiffuse());
 	_simpleShader->setVec3("light.specular", (*_lightsManager->getPointLights().begin())->getSpecular());
-	_objectsManager->draw();
+	_objectsManager->draw();*/
 }

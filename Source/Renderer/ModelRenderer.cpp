@@ -7,12 +7,12 @@
 
 
 #include "Camera/CameraFps.hpp"
-#include "Renderer/Shader.hpp"
+#include "Resources/Shader.hpp"
 #include "Renderer/Model.hpp"
 
 ModelRenderer::ModelRenderer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Model> &model, const glm::vec3 &pos, const glm::vec3 &size)
 	: _model(model),
-	Object(shader, pos, size, glm::vec3(1.0))
+	SceneElement(shader, pos, size, glm::vec3(1.0))
 {
 	
 }
