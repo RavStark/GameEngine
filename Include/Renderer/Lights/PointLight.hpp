@@ -14,6 +14,7 @@ public:
 
 	void setPos(const glm::vec3&pos);
 	glm::vec3 getPos(void) const;
+
 private:
 	glm::vec3 _pos;
 

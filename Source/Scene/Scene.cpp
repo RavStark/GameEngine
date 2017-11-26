@@ -2,6 +2,8 @@
 #include "Scene/SceneElement.hpp"
 #include "Camera/Camera.hpp"
 #include "Resources/TextureManager.hpp"
+#include "Resources/ResourceManager.hpp"
+#include "Renderer/LightsManager.hpp"
 #include <iostream>
 
 #include "GL\glew.h"
@@ -12,7 +14,7 @@
 Scene::Scene(const std::shared_ptr<Camera> &camera, const std::shared_ptr<TextureManager> &textureManager)
 	: _camera(camera), _textureManager(textureManager)
 {
-
+	_lightsManager = std::make_shared<LightsManager>();
 }
 
 Scene::~Scene()
@@ -26,7 +28,7 @@ void Scene::initialize()
 	}
 }
 
-void Scene::addObject(std::shared_ptr<SceneElement>&obj)
+void Scene::addObject(const std::shared_ptr<SceneElement>&obj)
 {
 	if (obj)
 	{
@@ -34,9 +36,27 @@ void Scene::addObject(std::shared_ptr<SceneElement>&obj)
 	}
 }
 
+void Scene::addLight(const std::shared_ptr<PointLight>&light)
+{
+	if (light)
+	{
+		_lightsManager->addLight(light);
+	}
+}
+
+void Scene::addLight(const std::shared_ptr<DirectionLight>&light)
+{
+	if (light)
+	{
+		_lightsManager->addLight(light);
+	}
+}
+
 void Scene::draw()
 {
+	_lightsManager->preRender(ResourceManager::getInstance()->getShader("color"));
 	/* DRAW OBJECT */
+
 	for (auto obj : _sceneElements)
 	{
 		obj.lock()->draw(_textureManager, _camera);

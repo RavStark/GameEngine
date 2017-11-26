@@ -7,7 +7,7 @@
 #include "Camera/CameraFps.hpp"
 #include "Resources/Shader.hpp"
 #include "Renderer/Model.hpp"
-
+#include "Scene/Scene.hpp"
 #include <iostream>
 //#include "Engine/Renderer/Shader.hpp"
 //shaders
@@ -16,11 +16,9 @@
 Renderer::Renderer(const std::shared_ptr<Camera>& camera, const std::shared_ptr<TextureManager> &textureManager)
 	: _camera(camera), _textureManager(textureManager)
 {
-	_lightsManager = std::make_shared<LightsManager>();
+	//_lightsManager = std::make_shared<LightsManager>();
 	//_objectsManager = std::make_shared<ObjectsManager>(_camera, _textureManager);
-	_simpleModelShader = std::make_shared<Shader>("./Shaders/model.vs", "./Shaders/model.frag");
-	_simpleShader = std::make_shared<Shader>("./Shaders/Color.vs", "./Shaders/Color.frag");
-	_multipleLightingShader = std::make_shared<Shader>("./Shaders/MultipleLighting.vs", "./Shaders/MultipleLighting.frag");
+	
 	
 }
 
@@ -69,8 +67,9 @@ void Renderer::update()
 
 }
 #include <iostream>
-void Renderer::draw()
+void Renderer::draw(Scene *scene)
 {
+	scene->draw();
 	/*for (auto model : _models)
 		model->draw(_textureManager, _camera);
 

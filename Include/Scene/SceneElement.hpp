@@ -7,7 +7,7 @@ typedef float GLfloat;
 
 class LightsManager;
 class Camera;
-class Shader;
+class Material;
 
 class TextureManager;
 
@@ -15,7 +15,7 @@ class TextureManager;
 class SceneElement
 {
 public:
-	explicit SceneElement(const std::shared_ptr<Shader>& shader,const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color);
+	explicit SceneElement(const glm::vec3 &pos, const glm::vec3 &size);
 	virtual ~SceneElement();
 
 	virtual void initRenderData() = 0;
@@ -30,11 +30,14 @@ public:
 	glm::vec3 getColor() const;
 	void setRotate(const float &rotate);
 	float getRotate() const;
+
+	void setMaterial(const std::shared_ptr<Material> &material);
+	std::shared_ptr<Material> getMaterial() const;
 	
 protected:
 
 	GLuint _vao;
-	std::shared_ptr<Shader> _shader;
+	std::shared_ptr<Material> _material; //shared_ptr ?
 
 	glm::vec3 _pos;
 	glm::vec3 _size;

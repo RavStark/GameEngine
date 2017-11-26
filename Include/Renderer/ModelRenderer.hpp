@@ -8,7 +8,7 @@ typedef unsigned int GLuint;
 typedef float GLfloat;
 
 class Model;
-
+class Shader;
 class ModelRenderer : public SceneElement
 {
 public:

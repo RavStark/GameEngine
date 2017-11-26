@@ -9,9 +9,10 @@
 #include "Resources/Shader.hpp"
 #include "Resources/TextureManager.hpp"
 #include "Camera/CameraFps.hpp"
+#include "Renderer/Objects/Material.hpp"
 
-CubeRenderer::CubeRenderer(const std::shared_ptr<Shader>& shader, const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
-	: SceneElement(shader, pos, size, color)
+CubeRenderer::CubeRenderer(const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
+	: SceneElement(pos, size)
 {
 	
 }
@@ -97,9 +98,8 @@ void CubeRenderer::initRenderData()
 void CubeRenderer::draw(const glm::mat4 &view, const glm::mat4 &projection) const
 {
 	// Prepare transformations
+	_material->getShader()->use();
 
-
-	this->_shader->use();
 	glm::mat4 model;
 	model = glm::translate(model, _pos);
 
@@ -109,12 +109,13 @@ void CubeRenderer::draw(const glm::mat4 &view, const glm::mat4 &projection) cons
 
 	model = glm::scale(model, _size);
 	glm::mat4 inverseModelView;
-	this->_shader->setMat4("model", model);
+	_material->getShader()->setMat4("model", model);
 	inverseModelView = glm::inverse(view * model);
-	this->_shader->setMat4("inverseModelView", inverseModelView);
-	this->_shader->setMat4("viewPos", view);
-	this->_shader->setMat4("projection", projection);
-	this->_shader->setVec3("objectColor", _color);
+	_material->getShader()->setMat4("inverseModelView", inverseModelView);
+	_material->getShader()->setMat4("viewPos", view);
+	_material->getShader()->setMat4("projection", projection);
+	_material->preRender();
+	//_material->getShader()->setVec3("objectColor", _color);
 	//glActiveTexture(GL_TEXTURE0);
 	//texture.Bind();
 
@@ -128,7 +129,7 @@ void CubeRenderer::draw(const std::shared_ptr<TextureManager>& textureManger, co
 	// Prepare transformations
 
 	
-	this->_shader->use();
+	_material->getShader()->use();
 	glBindVertexArray(this->_vao);
 	glm::mat4 model;
 	model = glm::translate(model, _pos);
@@ -143,19 +144,19 @@ void CubeRenderer::draw(const std::shared_ptr<TextureManager>& textureManger, co
 	glm::mat4 projection;
 	/* DEBUG*/
 	/* ****** */
-	this->_shader->setMat4("model", model);
+	_material->getShader()->setMat4("model", model);
 	view = glm::translate(view, camera->getPos());
 	inverseModel = glm::inverse(model);
 	//this->_shader->setMat4("inverseModel", inverseModel);
-	//this->_shader->setVec3("viewPos", camera->getPos());
-	this->_shader->setMat4("view", camera->viewMatrix());
-	this->_shader->setMat4("projection", camera->projectionMatrix());
-
+	_material->getShader()->setVec3("viewPos", camera->getPos());
+	_material->getShader()->setMat4("view", camera->viewMatrix());
+	_material->getShader()->setMat4("projection", camera->projectionMatrix());
+	_material->preRender();
 	//Default
-	this->_shader->setVec3("material.ambient", _color);
+	/*this->_shader->setVec3("material.ambient", _color);
 	this->_shader->setVec3("material.diffuse", _color);
 	this->_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-	this->_shader->setFloat("material.shininess", 32.0f);
+	this->_shader->setFloat("material.shininess", 32.0f);*/
 
 	
 	//glActiveTexture(GL_TEXTURE0);

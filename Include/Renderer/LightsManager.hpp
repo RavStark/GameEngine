@@ -2,18 +2,19 @@
 
 #include <memory>
 #include <vector>
+
 class PointLight;
 class DirectionLight;
-
-typedef int GLint;
-typedef unsigned int GLuint;
-typedef float GLfloat;
+class Shader;
 
 class LightsManager
 {
 public:
 	LightsManager();
 	~LightsManager();
+
+	/* update Shader */
+	void preRender(Shader *shader) const;
 
 	void addLight(const std::shared_ptr<PointLight>&);
 	void addLight(const std::shared_ptr<DirectionLight>&);

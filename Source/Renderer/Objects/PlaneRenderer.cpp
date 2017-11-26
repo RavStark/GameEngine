@@ -8,7 +8,7 @@
 #include "Resources/Shader.hpp"
 
 PlaneRenderer::PlaneRenderer(const std::shared_ptr<Shader>& shader, const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
-	:SceneElement(shader, pos, size, color)
+	:SceneElement(pos, size)
 {
 	
 }
@@ -58,7 +58,7 @@ void PlaneRenderer::initRenderData()
 void PlaneRenderer::draw(const glm::mat4 &view, const glm::mat4 &projection) const
 {
 	// Prepare transformations
-	this->_shader->use();
+	/*this->_shader->use();
 	glm::mat4 model;
 	model = glm::translate(model, _pos);
 
@@ -83,5 +83,5 @@ void PlaneRenderer::draw(const glm::mat4 &view, const glm::mat4 &projection) con
 
 	glBindVertexArray(this->_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	glBindVertexArray(0);*/
 }

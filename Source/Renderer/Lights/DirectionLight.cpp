@@ -4,7 +4,7 @@
 #include "GL\glew.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include "Resources/Shader.hpp"
 
 DirectionLight::DirectionLight(const glm::vec3&dir,const glm::vec3 &color, const glm::vec3 &ambient, const glm::vec3 &diffuse, const glm::vec3 &specular)
 	:ILight(color, ambient, diffuse, specular),
@@ -17,7 +17,6 @@ DirectionLight::~DirectionLight()
 {
 
 }
-
 
 void DirectionLight::setDir(const glm::vec3&dir)
 {

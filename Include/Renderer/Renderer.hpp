@@ -13,6 +13,7 @@ class DirectionLight;
 class Camera;
 class TextureManager;
 class ModelRenderer;
+class Scene;
 
 class Renderer
 {
@@ -28,7 +29,7 @@ public:
 	void addLight(const std::shared_ptr<PointLight>& obj);
 	void addLight(const std::shared_ptr<DirectionLight>& obj);*/
 	void update();
-	void draw();
+	void draw(Scene *scene);
 	float x = 0.f;
 	float y = 0.f;
 	float z = 0.f;
@@ -40,13 +41,7 @@ private:
 	std::shared_ptr<LightsManager> _lightsManager = nullptr;
 	//std::shared_ptr<ObjectsManager> _objectsManager = nullptr;
 
-	
-	
-	std::shared_ptr<Shader> _simpleShader = nullptr;
-	std::shared_ptr<Shader> _simpleModelShader = nullptr;
-	//std::shared_ptr<Shader> _lightShader = nullptr;
-	std::shared_ptr<Shader> _multipleLightingShader = nullptr;
 
 	//tmp list model
-	std::vector<std::shared_ptr<ModelRenderer>> _models;
+	//std::vector<std::shared_ptr<ModelRenderer>> _models;
 };

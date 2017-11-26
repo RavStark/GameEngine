@@ -7,23 +7,27 @@
 class SceneElement;
 class TextureManager;
 class Camera;
-typedef int GLint;
-typedef unsigned int GLuint;
-typedef float GLfloat;
+class PointLight;
+class DirectionLight;
+class LightsManager;
 
 class Scene
 {
 public:
-	Scene(const std::shared_ptr<Camera> &camera, const std::shared_ptr<TextureManager> &textureManager);
+	explicit Scene(const std::shared_ptr<Camera> &camera, const std::shared_ptr<TextureManager> &textureManager);
 	~Scene();
 
-	void addObject(std::shared_ptr<SceneElement>&);
+	void addObject(const std::shared_ptr<SceneElement>&);
+	void addLight(const std::shared_ptr<PointLight>&);
+	void addLight(const std::shared_ptr<DirectionLight>&);
 	void initialize();
 	void update();
 	void draw();
 private:
 	std::shared_ptr<Camera> _camera;
 	std::shared_ptr<TextureManager> _textureManager;
+	std::shared_ptr<LightsManager> _lightsManager;
+
 	std::list<std::weak_ptr<SceneElement>> _sceneElements;
 	long long int _id = 0;
 };

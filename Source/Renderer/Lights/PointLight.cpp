@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Resources/Shader.hpp"
 #include "Resources/TextureManager.hpp"
 
 PointLight::PointLight(const glm::vec3&pos, const glm::vec3 &color, const glm::vec3 &ambient, const glm::vec3 &diffuse, const glm::vec3 &specular)

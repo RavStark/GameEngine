@@ -6,7 +6,7 @@
 typedef int GLint;
 typedef unsigned int GLuint;
 typedef float GLfloat;
-
+class Shader;
 
 class PlaneRenderer : public SceneElement
 {

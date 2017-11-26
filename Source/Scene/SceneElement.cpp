@@ -6,9 +6,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Resources/TextureManager.hpp"
+#include "Renderer\Objects\Material.hpp"
 
-SceneElement::SceneElement(const std::shared_ptr<Shader>& shader, const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
-	: _shader(shader), _pos(pos), _size(size), _color(color), _rotate(0)
+SceneElement::SceneElement(const glm::vec3 &pos, const glm::vec3 &size)
+	: _pos(pos), _size(size), _rotate(0)
 
 {
 	
@@ -57,4 +58,14 @@ void SceneElement::setRotate(const float &rotate)
 float SceneElement::getRotate() const
 {
 	return _rotate;
+}
+
+void SceneElement::setMaterial(const std::shared_ptr<Material> &material)
+{
+	_material = material;
+}
+
+std::shared_ptr<Material> SceneElement::getMaterial() const
+{
+	return _material;
 }

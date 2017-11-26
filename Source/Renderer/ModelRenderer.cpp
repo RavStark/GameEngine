@@ -12,7 +12,7 @@
 
 ModelRenderer::ModelRenderer(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Model> &model, const glm::vec3 &pos, const glm::vec3 &size)
 	: _model(model),
-	SceneElement(shader, pos, size, glm::vec3(1.0))
+	SceneElement(pos, size)
 {
 	
 }
@@ -36,7 +36,7 @@ void ModelRenderer::draw(const std::shared_ptr<TextureManager>& textureManger, c
 {
 	// Prepare transformations
 
-	
+	/*
 	this->_shader->use();
 	glBindVertexArray(this->_vao);
 	glm::mat4 model;
@@ -52,7 +52,7 @@ void ModelRenderer::draw(const std::shared_ptr<TextureManager>& textureManger, c
 	glm::mat4 projection;
 	/* DEBUG*/
 	/* ****** */
-	this->_shader->setMat4("model", model);
+	/*this->_shader->setMat4("model", model);
 	view = glm::translate(view, camera->getPos());
 	inverseModel = glm::inverse(model);
 	//this->_shader->setMat4("inverseModel", inverseModel);
@@ -71,5 +71,5 @@ void ModelRenderer::draw(const std::shared_ptr<TextureManager>& textureManger, c
 	//glBindTexture(GL_TEXTURE_2D, textureManger->getTexture("container"));
 //	glActiveTexture(GL_TEXTURE1);
 	//glBindTexture(GL_TEXTURE_2D, textureManger->getTexture("container2_specular"));
-
+	*/
 }
