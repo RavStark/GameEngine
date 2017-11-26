@@ -28,7 +28,7 @@ int ResourceManager::getTexture2D(const std::string &name) const
 }
 
 /* Load Shader*/
-Shader* ResourceManager::loadShader(const char *name, const char *pathVertex, const char *pathFragment)
+Shader* ResourceManager::loadShader(const std::string &name, const char *pathVertex, const char *pathFragment)
 {
 	Shader *shader = new Shader(pathVertex, pathFragment);
 
@@ -36,7 +36,7 @@ Shader* ResourceManager::loadShader(const char *name, const char *pathVertex, co
 	{
 		if (_shaderList.insert(std::make_pair(name, shader)).second == false)
 		{
-			std::cerr << "Error loading shader: name " << name << " already used" << std::endl;
+			std::cerr << "Error loading shader: name " << name.c_str() << " already used" << std::endl;
 			return nullptr;
 		}
 		return shader;
@@ -45,7 +45,7 @@ Shader* ResourceManager::loadShader(const char *name, const char *pathVertex, co
 }
 
 /* Get shader according to name */
-Shader *ResourceManager::getShader(const char *name) const
+Shader *ResourceManager::getShader(const std::string &name) const
 {
 	auto it = _shaderList.find(name);
 	if (it != _shaderList.end())
@@ -56,6 +56,8 @@ Shader *ResourceManager::getShader(const char *name) const
 std::shared_ptr<ResourceManager> ResourceManager::getInstance()
 {
 	if (_instance == nullptr)
-		return std::make_shared<ResourceManager>();
+	{
+		_instance = std::make_shared<ResourceManager>();
+	}
 	return _instance;
 }

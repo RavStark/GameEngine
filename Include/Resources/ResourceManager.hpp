@@ -26,13 +26,13 @@ public:
 	int getTexture2D(const std::string &name) const;
 
 	/* Load Shader*/
-	Shader* loadShader(const char *name, const char *pathVertex, const char *pathFragment);
+	Shader* loadShader(const std::string &name, const char *pathVertex, const char *pathFragment);
 	/* Get shader according to name */
-	Shader *getShader(const char *name) const;
+	Shader *getShader(const std::string &name) const;
 	/* RessourceManager singleton */
 	static std::shared_ptr<ResourceManager> getInstance();
 private:
-	std::unordered_map<const char *, Shader*> _shaderList;
+	std::unordered_map<std::string, Shader*> _shaderList;
 	std::unique_ptr<TextureManager> _textureManager = nullptr;
 	static std::shared_ptr<ResourceManager> _instance;
 };
