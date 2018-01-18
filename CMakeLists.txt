@@ -96,14 +96,36 @@ SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE})
 ADD_LIBRARY (
   GlEngine
   STATIC
+  ${ENGINE_SHADERS}
   ${ENGINE_LIB}
 )
 
-set_property(SOURCE ${PROJECT_SHADERS} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-set_property(SOURCE ${PROJECT_SHADERS} PROPERTY VS_DEPLOYMENT_LOCATION "Shaders")
+ADD_EXECUTABLE(
+
+  GlEngineMain
+
+  main.cpp
+  Game.hpp
+	Game.cpp
+)
+
+ADD_DEPENDENCIES(
+  GlEngineMain
+
+  GlEngine
+)
+set_property(SOURCE ${ENGINE_SHADERS} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${ENGINE_SHADERS} PROPERTY VS_DEPLOYMENT_LOCATION "Shaders")
 SET_TARGET_PROPERTIES(GlEngine PROPERTIES DEBUG_POSTFIX "_d")
-
-
-
-
+SET_TARGET_PROPERTIES(GlEngineMain PROPERTIES DEBUG_POSTFIX "_d")
+TARGET_LINK_LIBRARIES(
+	GlEngineMain
+	glfw3.lib
+	OpenGL32.lib
+	glew32s.lib
+	SOIL.lib
+	assimp-vc140-mt.lib
+    optimized GlEngine
+    debug GlEngine
+)
 

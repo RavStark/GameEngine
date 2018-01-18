@@ -16,8 +16,7 @@ public:
 	~ModelRenderer();
 
 	virtual void initRenderData();
-	virtual void draw(const glm::mat4 &view, const glm::mat4 &projection) const ;
-	virtual void draw(const std::shared_ptr<TextureManager>& textureManger, const std::shared_ptr<Camera> &camera) const ;
+	virtual void draw(const std::shared_ptr<Camera> &camera) const ;
 
 private:
 	std::shared_ptr<Model> _model;

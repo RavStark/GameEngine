@@ -1,30 +1,18 @@
 #include "Resources/ResourceManager.hpp"
-#include "Resources/TextureManager.hpp"
+#include "Resources/Texture.hpp"
 #include "Resources/Shader.hpp"
+#include <SOIL.h>
 #include <iostream>
 std::shared_ptr<ResourceManager> ResourceManager::_instance = nullptr;
 
 ResourceManager::ResourceManager()
 {
-	_textureManager = std::make_unique<TextureManager>();
+	
 }
 
 ResourceManager::~ResourceManager()
 {
 
-}
-
-void ResourceManager::loadTexture2D(const std::string &name, const char *path, GLint texture_wrap_s, GLint texture_wrap_t,
-	GLint texture_min_filter, GLint texture_mag_filter)
-{
-	_textureManager->loadNewTexture2D(name, path, texture_wrap_s, texture_wrap_t,
-		texture_min_filter, texture_mag_filter);
-}
-
-
-int ResourceManager::getTexture2D(const std::string &name) const
-{
-	return _textureManager->getTexture(name);
 }
 
 /* Load Shader*/
@@ -49,6 +37,45 @@ Shader *ResourceManager::getShader(const std::string &name) const
 {
 	auto it = _shaderList.find(name);
 	if (it != _shaderList.end())
+		return it->second;
+	return nullptr;
+}
+/* Texture */
+Texture *ResourceManager::loadTexture(const std::string &name, const char* textureSource, bool alpha)
+{
+	// first check if texture has been loader already, if so; return earlier loaded texture
+	auto it = _textureList.find(name);
+	if (it != _textureList.end())
+		return it->second;
+
+	Texture *texture = new Texture();
+	// Generate texture from file
+	if (alpha)
+	{
+		texture->InternalFormat = GL_RGBA;
+		texture->ImageFormat = GL_RGBA;
+	}
+	// Load image
+	int width, height;
+	unsigned char* image = SOIL_load_image(textureSource, &width, &height, 0, texture->ImageFormat == GL_RGBA ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB);
+	if (image == 0)
+	{
+		std::cerr << "TEXTUREMANAGER::LOADNEWTEXTURE::FAILED " << textureSource << std::endl;
+		return nullptr;
+	}
+	// Now generate texture
+	texture->generate(width, height, image);
+	// And finally free image data
+	SOIL_free_image_data(image);
+
+	// Store and return
+	_textureList.insert(std::make_pair(name, texture));
+	return texture;
+}
+Texture *ResourceManager::getTexture(const std::string &name) const
+{
+	auto it = _textureList.find(name);
+	if (it != _textureList.end())
 		return it->second;
 	return nullptr;
 }

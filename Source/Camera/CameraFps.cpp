@@ -29,7 +29,6 @@ glm::mat4 CameraFps::projectionMatrix() const
 {
 	return glm::perspective(_fov, (GLfloat)_screenWidth / (GLfloat)_screenHeight, 0.1f, 100.0f);
 }
-#include <iostream>
 
 void CameraFps::updateDirection(float xOffset, float yOffset, float)
 {

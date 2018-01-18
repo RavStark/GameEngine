@@ -7,7 +7,7 @@ typedef unsigned int GLuint;
 typedef float GLfloat;
 
 class Shader;
-
+class Texture;
 /*
   Material class contains color, ambient, diffuse, specular
    and Shader
@@ -27,6 +27,9 @@ public:
 	void setShader(Shader *shader);
 	Shader *getShader() const;
 
+	void setTexture(Texture *texture);
+	Texture *getTexture() const;
+
 	void setColor(const glm::vec3 &color);
 	glm::vec3 getColor() const;
 
@@ -43,8 +46,8 @@ public:
 	float getShininess() const;
 
 private:
-	Shader *_shader;
-
+	Shader *_shader = nullptr;
+	Texture *_texture = nullptr;
 	glm::vec3 _color;
 	glm::vec3 _ambient;
 	glm::vec3 _diffuse;

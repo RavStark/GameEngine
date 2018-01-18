@@ -7,7 +7,7 @@
 
 #include "Renderer/LightsManager.hpp"
 #include "Resources/Shader.hpp"
-#include "Resources/TextureManager.hpp"
+#include "Resources/Texture.hpp"
 #include "Camera/CameraFps.hpp"
 #include "Renderer/Objects/Material.hpp"
 
@@ -99,36 +99,7 @@ void CubeRenderer::initRenderData()
 	glBindVertexArray(0);
 }
 
-void CubeRenderer::draw(const glm::mat4 &view, const glm::mat4 &projection) const
-{
-	// Prepare transformations
-	_material->getShader()->use();
-
-	glm::mat4 model;
-	model = glm::translate(model, _pos);
-
-	//model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.5f * size.z));
-	model = glm::rotate(model, glm::radians(_rotate), glm::vec3(1.0f, 0.0f, 0.0f));
-	//model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, -0.5f * size.z));
-
-	model = glm::scale(model, _size);
-	glm::mat4 inverseModelView;
-	_material->getShader()->setMat4("model", model);
-	inverseModelView = glm::inverse(view * model);
-	_material->getShader()->setMat4("inverseModelView", inverseModelView);
-	_material->getShader()->setMat4("viewPos", view);
-	_material->getShader()->setMat4("projection", projection);
-	_material->preRender();
-	//_material->getShader()->setVec3("objectColor", _color);
-	//glActiveTexture(GL_TEXTURE0);
-	//texture.Bind();
-
-	glBindVertexArray(_vao);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
-}
-
-void CubeRenderer::draw(const std::shared_ptr<TextureManager>& textureManger, const std::shared_ptr<Camera> &camera) const
+void CubeRenderer::draw(const std::shared_ptr<Camera> &camera) const
 {
 	// Prepare transformations
 

@@ -1,5 +1,6 @@
 #include "Renderer/Objects/Material.hpp"
 #include "Resources/Shader.hpp"
+#include "Resources/Texture.hpp"
 #include <iostream>
 
 Material::Material()
@@ -18,13 +19,24 @@ void Material::preRender()
 {
 	if (_shader)
 	{
-		_shader->setVec3("material.ambient", _ambient);
-		_shader->setVec3("material.diffuse", _diffuse);
+		if (_texture)
+		{
+			_shader->setInt("hasTexture", 1);
+			_shader->setInt("material.diffuseText", 0);
+			_texture->bind(0);
+		}
+		else
+		{
+			_shader->setInt("hasTexture", 0);
+			_shader->setVec3("material.ambient", _ambient);
+			_shader->setVec3("material.diffuse", _diffuse);
+		}
 		_shader->setVec3("material.specular", _specular);
 		_shader->setFloat("material.shininess", _shininess);
 	}
 	else
 		std::cerr << "No shader has been set" << std::endl;
+	
 }
 
 void Material::setShader(Shader *shader)
@@ -35,6 +47,18 @@ void Material::setShader(Shader *shader)
 Shader *Material::getShader() const
 {
 	return _shader;
+}
+
+void Material::setTexture(Texture *texture)
+{
+	if (texture == nullptr)
+		std::cerr << "Texture is null" << std::endl;
+	_texture = texture;
+}
+
+Texture *Material::getTexture() const
+{
+	return _texture;
 }
 
 void Material::setColor(const glm::vec3 &color)

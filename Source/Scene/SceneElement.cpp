@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Resources/TextureManager.hpp"
 #include "Renderer\Objects\Material.hpp"
 
 SceneElement::SceneElement(const glm::vec3 &pos, const glm::vec3 &size)

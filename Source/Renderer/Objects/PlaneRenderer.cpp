@@ -4,10 +4,11 @@
 #include "GL\glew.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include "Camera/Camera.hpp"
 #include "Resources/Shader.hpp"
+#include "Renderer/Objects/Material.hpp"
 
-PlaneRenderer::PlaneRenderer(const std::shared_ptr<Shader>& shader, const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
+PlaneRenderer::PlaneRenderer(const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
 	:SceneElement(pos, size)
 {
 	
@@ -22,15 +23,14 @@ void PlaneRenderer::initRenderData()
 {
 	GLuint VBO;
 	GLfloat verticesPlane[] = {
-		// Positions          // Colors           // Texture Coords   //Normal
-		//face down
-		-0.5f,-0.5f,-0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		-0.5f,-0.5f, 0.5f,    0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		0.5f,-0.5f,-0.5f,    0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-
-		-0.5f, -0.5f, 0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		0.5f,-0.5f, 0.5f,    0.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		0.5f,-0.5f,-0.5f,    0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 0.0f, -1.0f, 0.0f
+		-5.0f, -0.5f, -5.0f,0.0f, 1.0f,0.0f,  0.0f, 2.0f,
+		5.0f, -0.5f,  5.0f, 0.0f, 1.0f,0.0f, 2.0f, 0.0f,
+		5.0f, -0.5f, -5.0f, 0.0f, 1.0f,0.0f,  2.0f, 2.0f,
+		5.0f, -0.5f,  5.0f, 0.0f, 1.0f,0.0f, 2.0f, 0.0f,
+		-5.0f, -0.5f, -5.0f, 0.0f, 1.0f,0.0f, 0.0f, 2.0f,
+		-5.0f, -0.5f,  5.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f
+		
+		
 	};
 	
 	glGenVertexArrays(1, &this->_vao);
@@ -40,48 +40,46 @@ void PlaneRenderer::initRenderData()
 
 	glBindVertexArray(this->_vao);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-	// Color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
-	// TexCoord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(2);
-	// Nomal attribute
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(3);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
-void PlaneRenderer::draw(const glm::mat4 &view, const glm::mat4 &projection) const
+void PlaneRenderer::draw(const std::shared_ptr<Camera> &camera) const
 {
-	// Prepare transformations
-	/*this->_shader->use();
+	_material->getShader()->use();
+	glBindVertexArray(this->_vao);
 	glm::mat4 model;
 	model = glm::translate(model, _pos);
 
-	//model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.5f * size.z));
+	model = glm::translate(model, glm::vec3(0.5f * _size.x, 0.5f * _size.y, 0.5f * _size.z));
 	model = glm::rotate(model, glm::radians(_rotate), glm::vec3(1.0f, 0.0f, 0.0f));
-	//model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, -0.5f * size.z));
+	model = glm::translate(model, glm::vec3(-0.5f * _size.x, -0.5f * _size.y, -0.5f * _size.z));
 
 	model = glm::scale(model, _size);
-	glm::mat4 inverseModelView;
-	this->_shader->setMat4("model", model);
-	inverseModelView = glm::inverse(view * model);
-	this->_shader->setMat4("inverseModelView", inverseModelView);
-	this->_shader->setMat4("view", view);
-	this->_shader->setMat4("projection", projection);
-	this->_shader->setVec3("objectColor", _color);
+	glm::mat4 inverseModel;
+	glm::mat4 view;
+	glm::mat4 projection;
+	/* DEBUG*/
+	/* ****** */
+	_material->getShader()->setMat4("model", model);
+	view = glm::translate(view, camera->getPos());
+	inverseModel = glm::inverse(model);
+	//this->_shader->setMat4("inverseModel", inverseModel);
+	_material->getShader()->setVec3("viewPos", camera->getPos());
+	_material->getShader()->setMat4("view", camera->viewMatrix());
+	_material->getShader()->setMat4("projection", camera->projectionMatrix());
+	_material->preRender();
+	
 
-	this->_shader->setInt("material.diffuse", 0);
-	this->_shader->setInt("material.specular", 1);
-	this->_shader->setInt("material.emission", 1);
-	//glActiveTexture(GL_TEXTURE0);
-	//texture.Bind();
-
-	glBindVertexArray(this->_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);*/
+	glBindVertexArray(0);
 }

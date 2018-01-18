@@ -6,7 +6,7 @@
 
 class Scene;
 class Shader;
-class TextureManager;
+class Texture;
 typedef int GLint;
 typedef unsigned int GLuint;
 /* Need to understand bit specification to replace GlInt */
@@ -19,20 +19,20 @@ public:
 	//load a xml file and fill a scene
 	bool loadLevel(const std::string &levelFile, Scene *scene);
 
-	/* LoadTexture */
-	void loadTexture2D(const std::string &name, const char *path, GLint texture_wrap_s, GLint texture_wrap_t,
-		GLint texture_min_filter, GLint texture_mag_filter);
-	/* Get texture2d according to name */
-	int getTexture2D(const std::string &name) const;
-
 	/* Load Shader*/
 	Shader* loadShader(const std::string &name, const char *pathVertex, const char *pathFragment);
 	/* Get shader according to name */
 	Shader *getShader(const std::string &name) const;
+
+	/* Texture2D*/
+
+	Texture *loadTexture(const std::string &name, const char* textureSource, bool alpha);
+	Texture *getTexture(const std::string &name) const;
+
 	/* RessourceManager singleton */
 	static std::shared_ptr<ResourceManager> getInstance();
 private:
 	std::unordered_map<std::string, Shader*> _shaderList;
-	std::unique_ptr<TextureManager> _textureManager = nullptr;
+	std::unordered_map<std::string, Texture*> _textureList;
 	static std::shared_ptr<ResourceManager> _instance;
 };

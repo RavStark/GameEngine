@@ -1,7 +1,6 @@
 #include "Scene/Scene.hpp"
 #include "Scene/SceneElement.hpp"
 #include "Camera/Camera.hpp"
-#include "Resources/TextureManager.hpp"
 #include "Resources/ResourceManager.hpp"
 #include "Renderer/LightsManager.hpp"
 #include <iostream>
@@ -11,8 +10,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-Scene::Scene(const std::shared_ptr<Camera> &camera, const std::shared_ptr<TextureManager> &textureManager)
-	: _camera(camera), _textureManager(textureManager)
+Scene::Scene(const std::shared_ptr<Camera> &camera)
+	: _camera(camera)
 {
 	_lightsManager = std::make_shared<LightsManager>();
 }
@@ -59,6 +58,6 @@ void Scene::draw()
 
 	for (auto obj : _sceneElements)
 	{
-		obj.lock()->draw(_textureManager, _camera);
+		obj.lock()->draw(_camera);
 	}
 }

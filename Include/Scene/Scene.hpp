@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 class SceneElement;
-class TextureManager;
 class Camera;
 class PointLight;
 class DirectionLight;
@@ -14,7 +13,7 @@ class LightsManager;
 class Scene
 {
 public:
-	explicit Scene(const std::shared_ptr<Camera> &camera, const std::shared_ptr<TextureManager> &textureManager);
+	explicit Scene(const std::shared_ptr<Camera> &camera);
 	~Scene();
 
 	void addObject(const std::shared_ptr<SceneElement>&);
@@ -25,7 +24,6 @@ public:
 	void draw();
 private:
 	std::shared_ptr<Camera> _camera;
-	std::shared_ptr<TextureManager> _textureManager;
 	std::shared_ptr<LightsManager> _lightsManager;
 
 	std::list<std::weak_ptr<SceneElement>> _sceneElements;

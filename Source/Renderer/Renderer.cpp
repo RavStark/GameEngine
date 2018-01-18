@@ -13,8 +13,8 @@
 //shaders
 
 
-Renderer::Renderer(const std::shared_ptr<Camera>& camera, const std::shared_ptr<TextureManager> &textureManager)
-	: _camera(camera), _textureManager(textureManager)
+Renderer::Renderer(const std::shared_ptr<Camera>& camera)
+	: _camera(camera)
 {
 	//_lightsManager = std::make_shared<LightsManager>();
 	//_objectsManager = std::make_shared<ObjectsManager>(_camera, _textureManager);

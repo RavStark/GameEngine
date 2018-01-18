@@ -9,9 +9,6 @@ class LightsManager;
 class Camera;
 class Material;
 
-class TextureManager;
-
-
 class SceneElement
 {
 public:
@@ -19,8 +16,7 @@ public:
 	virtual ~SceneElement();
 
 	virtual void initRenderData() = 0;
-	virtual void draw(const glm::mat4 &view, const glm::mat4 &projection) const = 0;
-	virtual void draw(const std::shared_ptr<TextureManager>& textureManger, const std::shared_ptr<Camera> &camera) const = 0;
+	virtual void draw(const std::shared_ptr<Camera> &camera) const = 0;
 
 	void setPos(const glm::vec3 &pos);
 	glm::vec3 getPos() const;

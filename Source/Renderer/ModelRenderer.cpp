@@ -27,12 +27,7 @@ void ModelRenderer::initRenderData()
 	
 }
 
-void ModelRenderer::draw(const glm::mat4 &view, const glm::mat4 &projection) const
-{
-
-}
-
-void ModelRenderer::draw(const std::shared_ptr<TextureManager>& textureManger, const std::shared_ptr<Camera> &camera) const
+void ModelRenderer::draw(const std::shared_ptr<Camera> &camera) const
 {
 	// Prepare transformations
 
