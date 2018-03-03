@@ -3,7 +3,7 @@
 #include <SOIL.h>
 #include "GL\glew.h"
 #include <stdexcept>
-Model::Model(const char *path)
+/*Model::Model(const char *path)
 {
 
 	if (!loadModel(path))
@@ -93,7 +93,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		vector.y = mesh->mBitangents[i].y;
 		vector.z = mesh->mBitangents[i].z;
 		vertex.Bitangent = vector;*/
-		vertices.push_back(vertex);
+	/*	vertices.push_back(vertex);
 	}
 	// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -144,7 +144,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 	}
 	return textures;
 }*/
-
+/*
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
 {
 	std::vector<Texture> textures;
@@ -173,4 +173,4 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 		}
 	}
 	return textures;
-}
+}*/

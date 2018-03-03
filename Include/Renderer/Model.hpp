@@ -6,26 +6,26 @@
 #include "Resources/Shader.hpp"
 typedef int GLint;
 typedef unsigned int GLuint;
-#include "Mesh.hpp"
+#include "Mesh/Mesh.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <SOIL.h>
 #include <iostream>
-
+/*
 class Model
 {
 public:
 	/*  Functions   */
-	Model(const char *path);
+	/*Model(const char *path);
 	void Draw(Shader shader);
 private:
 	/*  Model Data  */
-	std::vector<Mesh> meshes;
+	/*std::vector<Mesh> meshes;
 	std::string directory;
 	/*  Functions   */
-	std::vector<Texture> textures_loaded;
+	/*std::vector<Texture> textures_loaded;
 	bool loadModel(const std::string &path);
 	void processNode(aiNode *node, const aiScene *scene);
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
@@ -74,3 +74,4 @@ private:
 	}
 };
 
+*/

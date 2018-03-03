@@ -1,4 +1,4 @@
-#include "Renderer/Objects/PlaneRenderer.hpp"
+#include "Mesh/Plane.hpp"
 #include <iostream>
 
 #include "GL\glew.h"
@@ -8,17 +8,42 @@
 #include "Resources/Shader.hpp"
 #include "Renderer/Objects/Material.hpp"
 
-PlaneRenderer::PlaneRenderer(const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
-	:SceneElement(pos, size)
+Plane::Plane()
+	:Mesh()
 {
-	
+	_vertices = std::vector<glm::vec3>{
+		glm::vec3(-5.0f, -0.5f, -5.0f), 
+		glm::vec3(5.0f, -0.5f,  5.0f),
+		glm::vec3(5.0f, -0.5f, -5.0f),
+		glm::vec3(5.0f, -0.5f,  5.0f),
+		glm::vec3(-5.0f, -0.5f, -5.0f),
+		glm::vec3(-5.0f, -0.5f,  5.0f),
+	}; 
+	_normals = std::vector<glm::vec3>{
+
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f,0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+	};
+	_UV = std::vector<glm::vec2>{
+		glm::vec2(0.0f, 2.0f),
+		glm::vec2(2.0f, 0.0f),
+		glm::vec2(2.0f, 2.0f),
+		glm::vec2(2.0f, 0.0f),
+		glm::vec2(0.0f, 2.0f),
+		glm::vec2(0.0f, 0.0f)
+	};
+	initRenderData();
 }
 
-PlaneRenderer::~PlaneRenderer()
+Plane::~Plane()
 {
 
 }
-
+/*
 void PlaneRenderer::initRenderData()
 {
 	GLuint VBO;
@@ -51,8 +76,8 @@ void PlaneRenderer::initRenderData()
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-}
-
+}*/
+/*
 void PlaneRenderer::draw(const std::shared_ptr<Camera> &camera) const
 {
 	_material->getShader()->use();
@@ -70,7 +95,7 @@ void PlaneRenderer::draw(const std::shared_ptr<Camera> &camera) const
 	glm::mat4 projection;
 	/* DEBUG*/
 	/* ****** */
-	_material->getShader()->setMat4("model", model);
+	/*_material->getShader()->setMat4("model", model);
 	view = glm::translate(view, camera->getPos());
 	inverseModel = glm::inverse(model);
 	//this->_shader->setMat4("inverseModel", inverseModel);
@@ -82,4 +107,4 @@ void PlaneRenderer::draw(const std::shared_ptr<Camera> &camera) const
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
-}
+}*/

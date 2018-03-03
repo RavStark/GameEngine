@@ -16,16 +16,17 @@ public:
 	explicit Scene(const std::shared_ptr<Camera> &camera);
 	~Scene();
 
-	void addObject(const std::shared_ptr<SceneElement>&);
+	void preRender();
+	void addObject(SceneElement*);
 	void addLight(const std::shared_ptr<PointLight>&);
 	void addLight(const std::shared_ptr<DirectionLight>&);
-	void initialize();
-	void update();
-	void draw();
+
+	//TODO: Get elements from a certain id, type?
+	std::list<SceneElement*> getSceneElements() const;
 private:
 	std::shared_ptr<Camera> _camera;
 	std::shared_ptr<LightsManager> _lightsManager;
 
-	std::list<std::weak_ptr<SceneElement>> _sceneElements;
+	std::list<SceneElement*> _sceneElements;
 	long long int _id = 0;
 };

@@ -67,6 +67,7 @@ Shader::~Shader()
 GLuint Shader::createShader(const GLchar * source, GLenum type)
 {
 	GLuint shader = glCreateShader(type);
+	
 	glShaderSource(shader, 1, &source, NULL);
 	glCompileShader(shader);
 	GLint success;
@@ -82,6 +83,7 @@ GLuint Shader::createShader(const GLchar * source, GLenum type)
 
 void Shader::use()
 {
+	//std::cerr << "use Program Id " << _program << std::endl;
 	glUseProgram(_program);
 }
 

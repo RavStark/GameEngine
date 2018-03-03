@@ -10,12 +10,14 @@
 #include "Resources/Texture.hpp"
 #include "Resources/ResourceManager.hpp"
 #include "Camera/CameraFps.hpp"
-#include "Renderer/Objects/PlaneRenderer.hpp"
-#include "Renderer/Objects/CubeRenderer.hpp"
+#include "Mesh/Mesh.hpp"
+#include "Mesh/Cube.hpp"
+#include "Mesh/Plane.hpp"
 #include "Renderer/LightsManager.hpp"
 #include "Renderer/Lights/PointLight.hpp"
 #include "Renderer/Objects/Material.hpp"
 #include "Scene/Scene.hpp"
+#include "Scene/SceneElement.hpp"
 #include <iostream>
 #include <string>
 #include <memory>
@@ -229,8 +231,8 @@ int main(int , char *[])
 	//Camera
 	camera = std::make_shared<CameraFps>(glm::vec3(0.0f, 0.0f, 3.0f), screenWidth, screenHeight);
 
-	ResourceManager::getInstance()->loadTexture("container", "./Ressources/Textures/container.jpg", false);
-	ResourceManager::getInstance()->loadTexture("container2_specular", "./Ressources/Textures/container2_specular.png", false);
+	ResourceManager::getInstance()->loadTexture("container", "./Resources/Textures/container.jpg", false);
+	ResourceManager::getInstance()->loadTexture("container2_specular", "./Resources/Textures/container2_specular.png", false);
 	//textureManager->loadNewTexture2D("matrix", "./Ressources/Textures/matrix.jpg", GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
 	Shader *simpleModelShader = new Shader("./Shaders/model.vs", "./Shaders/model.frag");
@@ -238,18 +240,19 @@ int main(int , char *[])
 	Shader * multipleLightingShader = new Shader("./Shaders/MultipleLighting.vs", "./Shaders/MultipleLighting.frag");
 
 	ResourceManager::getInstance()->loadShader("color", "./Shaders/Color.vs", "./Shaders/Color.frag");
+	ResourceManager::getInstance()->loadShader("sphere", "./Shaders/sphere.vs", "./Shaders/sphere.frag");
 	Renderer renderer(camera);
 	Scene *scene = new Scene(camera);
 
 
 	/* LIGHT */
-	for (auto lightPos : pointLightPositions)
+	/*for (auto lightPos : pointLightPositions)
 	{
 		auto pointLight = std::make_shared<PointLight>(lightPos);
 		scene->addLight(pointLight);
 		/*renderer.addObject(lightPos, glm::vec3(0.2));
 		renderer.addLight(pointLight);*/
-	}
+	//}
 
 	/*create object*/
 	auto material = std::make_shared<Material>();
@@ -260,14 +263,30 @@ int main(int , char *[])
 	material->setSpecular(glm::vec3(0.5));
 	material->setShininess(0.5);
 	material->setTexture(ResourceManager::getInstance()->getTexture("container"));
-	auto obj = std::make_shared<CubeRenderer>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0), glm::vec3(1.0f, 0.5f, 0.31f));
-	obj->setMaterial(material);
-	scene->addObject(obj);
 
-	auto obj2 = std::make_shared<PlaneRenderer>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(3.0), glm::vec3(1.0f, 0.5f, 0.31f));
+	auto material2 = std::make_shared<Material>();
+	material2->setShader(ResourceManager::getInstance()->getShader("sphere"));
+	material2->setColor(glm::vec3(0.5));
+	material2->setAmbient(glm::vec3(1.0f, 0.5f, 0.31f));
+	material2->setDiffuse(glm::vec3(1.0f, 0.5f, 0.31f));
+	material2->setSpecular(glm::vec3(0.5));
+	material2->setShininess(0.5);
+	//material->setTexture(ResourceManager::getInstance()->getTexture("container"));
+	//auto obj = std::make_shared<CubeRenderer>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0), glm::vec3(1.0f, 0.5f, 0.31f));
+	//obj->setMaterial(material);
+	//scene->addObject(obj);
+
+	/*auto obj2 = std::make_shared<PlaneRenderer>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(3.0), glm::vec3(1.0f, 0.5f, 0.31f));
 	obj2->setMaterial(material);
-	scene->addObject(obj2);
+	scene->addObject(obj2);*/
 	
+	Mesh *cubeMesh = new Cube();
+	SceneElement *sceneEl = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));// , glm::vec3(1.0f, 0.5f, 0.31f));
+	//auto obj3 = std::make_shared<CubeRenderer>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0), glm::vec3(1.0f, 0.5f, 0.31f));
+	sceneEl->setMaterial(material.get());
+	sceneEl->setMesh(cubeMesh);
+	scene->addObject(sceneEl);
+
 	//renderer.addModel("./Ressources/Model/Sylvanas/Sylvanas.obj", glm::vec3(0.0f, 0.0f, 0.0f));
 	//renderer.addModel("./Ressources/Model/sebulbapod/sebulbapod2.3ds", glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
@@ -282,7 +301,6 @@ int main(int , char *[])
 	GLfloat currentFrame = 0.f;
 	GLfloat time = 0.f;
 	GLuint fps = 0;
-	scene->initialize();
 	while (!glfwWindowShouldClose(window))
 	{
 		currentFrame = glfwGetTime();
@@ -292,17 +310,15 @@ int main(int , char *[])
 		++fps;
 		if (time >= 1.f)
 		{
-			glfwSetWindowTitle(window, std::string("Game Engine Beta 0.1 fps:" + std::to_string(fps)).c_str());
+			glfwSetWindowTitle(window, std::string("Game Engine 0.1 fps:" + std::to_string(fps)).c_str());
 			time = 1.0f - time;
 			fps = 0;
 		}
 		glfwPollEvents();
 		do_mouvement(camera);
+		renderer.update(scene);
 		glClearColor(0.f, 0.f, 0.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderer.x = camera->getPos().x;
-		renderer.y = camera->getPos().y;
-		renderer.z = camera->getPos().z;
 		renderer.draw(scene);
 		
 		glfwSwapBuffers(window);

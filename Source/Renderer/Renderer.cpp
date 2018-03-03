@@ -1,107 +1,71 @@
 #include <string>
 #include "Renderer/Renderer.hpp"
 #include "Renderer/LightsManager.hpp"
-#include "Renderer/Objects/CubeRenderer.hpp"
-#include "Renderer/ModelRenderer.hpp"
+#include "Renderer/Objects/Material.hpp"
 #include "Renderer/Lights/PointLight.hpp"
+#include "Mesh/Mesh.hpp"
 #include "Camera/CameraFps.hpp"
 #include "Resources/Shader.hpp"
+#include "Resources/ResourceManager.hpp"
 #include "Renderer/Model.hpp"
 #include "Scene/Scene.hpp"
+#include "Scene/SceneElement.hpp"
 #include <iostream>
-//#include "Engine/Renderer/Shader.hpp"
-//shaders
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
+/* 
+	TODO : Is update and draw need to loop on all Objects ??
+*/
 
 Renderer::Renderer(const std::shared_ptr<Camera>& camera)
 	: _camera(camera)
 {
-	//_lightsManager = std::make_shared<LightsManager>();
-	//_objectsManager = std::make_shared<ObjectsManager>(_camera, _textureManager);
-	
-	
 }
 
-/*** OBSOLETE 
-void Renderer::addModel(const char *path, const glm::vec3 &pos, const glm::vec3 &size)
+void Renderer::update(Scene *scene)
 {
-	try
+	// Prepare transformations
+
+	for (auto elements : scene->getSceneElements())
 	{
-		auto model = std::make_shared<Model>(path); //"./Project/Ressources/Model/Nanosuit/lol.obj");
-		if (model)
-		{
-			auto modelRenderer = std::make_shared<ModelRenderer>(_simpleModelShader, model, pos, size);
-			_models.push_back(modelRenderer);
-		}
-	}
-	catch (...)
-	{
+		elements->getMaterial()->getShader()->use();
+		glBindVertexArray(elements->getMesh()->_vao);//Needed ?
+		//TODO Be sure that the material exit (default)
+		
+		
+		glm::mat4 model;
+		model = glm::rotate(model, glm::radians(elements->getRotate()), glm::vec3(1.0f, 0.0f, 0.0f)); //Need to improve, Axis? Quaternion.?
+		model = glm::translate(model, elements->getPos());
+
+		model = glm::scale(model, elements->getSize());
+		/*glm::mat4 inverseModel;
+		glm::mat4 view;
+		glm::mat4 projection;*/
+		elements->getMaterial()->getShader()->setMat4("model", model);
+		/*view = glm::translate(view, _camera->getPos());
+		inverseModel = glm::inverse(model);
+		//this->_shader->setMat4("inverseModel", inverseModel);*/
+		
+		elements->getMaterial()->getShader()->setVec3("viewPos", _camera->getPos());
+		elements->getMaterial()->getShader()->setMat4("view", _camera->viewMatrix());
+		elements->getMaterial()->getShader()->setMat4("projection", _camera->projectionMatrix());
+		elements->getMaterial()->preRender();
+		glBindVertexArray(0); //Needed ?
 
 	}
-}
-
-void Renderer::addObject(const glm::vec3 &pos, const glm::vec3 &size, const glm::vec3& color)
-{
-
-	//if (t == Type::LIGHT)
-	//	shader = _lightShader;
-	//else
-	
-	auto cubeRenderer = std::make_shared<CubeRenderer>(_simpleShader, pos, size, color);
-	cubeRenderer->initRenderData();
-	_objectsManager->addObject(cubeRenderer);
-}
-
-void Renderer::addLight(const std::shared_ptr<PointLight>& obj)
-{
-	_lightsManager->addLight(obj);
-}
-
-void Renderer::addLight(const std::shared_ptr<DirectionLight>& obj)
-{
-	_lightsManager->addLight(obj);
-}***/
-
-void Renderer::update()
-{
-
 }
 #include <iostream>
 void Renderer::draw(Scene *scene)
 {
-	scene->draw();
-	/*for (auto model : _models)
-		model->draw(_textureManager, _camera);
-
-	_multipleLightingShader->use();
-	_multipleLightingShader->setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-	_multipleLightingShader->setVec3("dirLight.ambient", 1.0f);
-	_multipleLightingShader->setVec3("dirLight.diffuse", 1.0f);
-	_multipleLightingShader->setVec3("dirLight.specular", 1.0f);
-	unsigned idx = 0;
-	//Set light shader 4 PointLights Max for now
-	for (auto light : _lightsManager->getPointLights())
+	scene->preRender();
+	for (auto elements : scene->getSceneElements())
 	{
-		if (idx == 4)
-			break;
-		_multipleLightingShader->setVec3(std::string("pointLights["+std::to_string(idx) + "].position").c_str(), light->getPos());
-		_multipleLightingShader->setVec3(std::string("pointLights[" + std::to_string(idx) + "].ambient").c_str(), light->getAmbient());
-		_multipleLightingShader->setVec3(std::string("pointLights[" + std::to_string(idx) + "].diffuse").c_str(), light->getDiffuse());
-		_multipleLightingShader->setVec3(std::string("pointLights[" + std::to_string(idx) + "].specular").c_str(), light->getSpecular());
-		_multipleLightingShader->setFloat(std::string("pointLights[" + std::to_string(idx) + "].constant").c_str(), light->getConstant());
-		_multipleLightingShader->setFloat(std::string("pointLights[" + std::to_string(idx) + "].linear").c_str(), light->getLinear());
-		_multipleLightingShader->setFloat(std::string("pointLights[" + std::to_string(idx) + "].quadratic").c_str(), light->getQuadratic());
-		idx++;
+	glBindVertexArray(elements->getMesh()->_vao);
+	//
+	//std::cerr << elements->getMesh()->getVerticesSize() << std::endl;
+	glDrawArrays(GL_TRIANGLES, 0, elements->getMesh()->getVerticesSize());
+	glBindVertexArray(0);
 	}
-	_simpleShader->use();
-	_simpleShader->setVec3("viewPosition", _camera->getPos());
-	// lighting
-	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-	//std::cerr << x << " " << y << " "<<z << std::endl;
-	_simpleShader->setVec3("light.position", (*_lightsManager->getPointLights().begin())->getPos());
-	_simpleShader->setVec3("light.ambient", (*_lightsManager->getPointLights().begin())->getAmbient());
-	_simpleShader->setVec3("light.diffuse", (*_lightsManager->getPointLights().begin())->getDiffuse());
-	_simpleShader->setVec3("light.specular", (*_lightsManager->getPointLights().begin())->getSpecular());
-	_objectsManager->draw();*/
 }

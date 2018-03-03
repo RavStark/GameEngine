@@ -14,6 +14,12 @@ SceneElement::SceneElement(const glm::vec3 &pos, const glm::vec3 &size)
 	
 }
 
+SceneElement::SceneElement(Mesh *mesh, Material *material)
+	:_mesh(mesh), _material(material)
+{
+
+}
+
 SceneElement::~SceneElement()
 {
 
@@ -59,12 +65,22 @@ float SceneElement::getRotate() const
 	return _rotate;
 }
 
-void SceneElement::setMaterial(const std::shared_ptr<Material> &material)
+void SceneElement::setMaterial(Material *material)
 {
 	_material = material;
 }
 
-std::shared_ptr<Material> SceneElement::getMaterial() const
+Material *SceneElement::getMaterial() const
 {
 	return _material;
+}
+
+void SceneElement::setMesh(Mesh *mesh)
+{
+	_mesh = mesh;
+}
+
+Mesh* SceneElement::getMesh()
+{
+	return _mesh;
 }

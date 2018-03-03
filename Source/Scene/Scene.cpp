@@ -19,15 +19,7 @@ Scene::Scene(const std::shared_ptr<Camera> &camera)
 Scene::~Scene()
 {}
 
-void Scene::initialize()
-{
-	for (auto element : _sceneElements)
-	{
-		element.lock()->initRenderData();
-	}
-}
-
-void Scene::addObject(const std::shared_ptr<SceneElement>&obj)
+void Scene::addObject(SceneElement* obj)
 {
 	if (obj)
 	{
@@ -51,13 +43,23 @@ void Scene::addLight(const std::shared_ptr<DirectionLight>&light)
 	}
 }
 
+void Scene::preRender()
+{
+	_lightsManager->preRender(ResourceManager::getInstance()->getShader("color"));
+}
+/*
 void Scene::draw()
 {
 	_lightsManager->preRender(ResourceManager::getInstance()->getShader("color"));
 	/* DRAW OBJECT */
 
-	for (auto obj : _sceneElements)
+	/*for (auto obj : _sceneElements)
 	{
 		obj.lock()->draw(_camera);
 	}
+}*/
+
+std::list<SceneElement*> Scene::getSceneElements() const
+{
+	return _sceneElements;
 }

@@ -8,15 +8,14 @@ typedef float GLfloat;
 class LightsManager;
 class Camera;
 class Material;
+class Mesh;
 
 class SceneElement
 {
 public:
 	explicit SceneElement(const glm::vec3 &pos, const glm::vec3 &size);
+	explicit SceneElement(Mesh *mesh, Material *material);
 	virtual ~SceneElement();
-
-	virtual void initRenderData() = 0;
-	virtual void draw(const std::shared_ptr<Camera> &camera) const = 0;
 
 	void setPos(const glm::vec3 &pos);
 	glm::vec3 getPos() const;
@@ -27,13 +26,15 @@ public:
 	void setRotate(const float &rotate);
 	float getRotate() const;
 
-	void setMaterial(const std::shared_ptr<Material> &material);
-	std::shared_ptr<Material> getMaterial() const;
+	void setMaterial(Material *material);
+	Material *getMaterial() const;
+	void setMesh(Mesh*);
+	Mesh* getMesh();
 	
 protected:
 
-	GLuint _vao;
-	std::shared_ptr<Material> _material; //shared_ptr ?
+	Material *_material;
+	Mesh *_mesh;
 
 	glm::vec3 _pos;
 	glm::vec3 _size;
