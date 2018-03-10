@@ -230,29 +230,38 @@ int main(int , char *[])
 	
 	//Camera
 	camera = std::make_shared<CameraFps>(glm::vec3(0.0f, 0.0f, 3.0f), screenWidth, screenHeight);
-
+	
+	/*Skybox*/
+	std::vector< std::string> skyboxpath{
+		"./Resources/Textures/skybox/right.jpg",
+		"./Resources/Textures/skybox/left.jpg",
+		"./Resources/Textures/skybox/top.jpg",
+		"./Resources/Textures/skybox/bottom.jpg",
+		"./Resources/Textures/skybox/front.jpg",
+		"./Resources/Textures/skybox/back.jpg", };
+	ResourceManager::getInstance()->loadCubemap("skyboxpath", skyboxpath, false);
+	/*Textures*/
 	ResourceManager::getInstance()->loadTexture("container", "./Resources/Textures/container.jpg", false);
 	ResourceManager::getInstance()->loadTexture("container2_specular", "./Resources/Textures/container2_specular.png", false);
 	//textureManager->loadNewTexture2D("matrix", "./Ressources/Textures/matrix.jpg", GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
-	Shader *simpleModelShader = new Shader("./Shaders/model.vs", "./Shaders/model.frag");
-	//Shader *simpleShader = new Shader("./Shaders/Color.vs", "./Shaders/Color.frag");
 	Shader * multipleLightingShader = new Shader("./Shaders/MultipleLighting.vs", "./Shaders/MultipleLighting.frag");
 
 	ResourceManager::getInstance()->loadShader("color", "./Shaders/Color.vs", "./Shaders/Color.frag");
 	ResourceManager::getInstance()->loadShader("sphere", "./Shaders/sphere.vs", "./Shaders/sphere.frag");
+	ResourceManager::getInstance()->loadShader("cubemap", "./Shaders/skybox.vs", "./Shaders/skybox.frag");
 	Renderer renderer(camera);
 	Scene *scene = new Scene(camera);
 
 
 	/* LIGHT */
-	/*for (auto lightPos : pointLightPositions)
+	for (auto lightPos : pointLightPositions)
 	{
 		auto pointLight = std::make_shared<PointLight>(lightPos);
 		scene->addLight(pointLight);
 		/*renderer.addObject(lightPos, glm::vec3(0.2));
 		renderer.addLight(pointLight);*/
-	//}
+	}
 
 	/*create object*/
 	auto material = std::make_shared<Material>();
@@ -271,24 +280,33 @@ int main(int , char *[])
 	material2->setDiffuse(glm::vec3(1.0f, 0.5f, 0.31f));
 	material2->setSpecular(glm::vec3(0.5));
 	material2->setShininess(0.5);
-	//material->setTexture(ResourceManager::getInstance()->getTexture("container"));
-	//auto obj = std::make_shared<CubeRenderer>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0), glm::vec3(1.0f, 0.5f, 0.31f));
-	//obj->setMaterial(material);
-	//scene->addObject(obj);
 
-	/*auto obj2 = std::make_shared<PlaneRenderer>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(3.0), glm::vec3(1.0f, 0.5f, 0.31f));
-	obj2->setMaterial(material);
-	scene->addObject(obj2);*/
+	auto materialCubemap = std::make_shared<Material>();
+	materialCubemap->setShader(ResourceManager::getInstance()->getShader("cubemap"));
+	materialCubemap->setTexture(ResourceManager::getInstance()->getTexture("skyboxpath"));
+
 	
 	Mesh *cubeMesh = new Cube();
-	SceneElement *sceneEl = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));// , glm::vec3(1.0f, 0.5f, 0.31f));
-	//auto obj3 = std::make_shared<CubeRenderer>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0), glm::vec3(1.0f, 0.5f, 0.31f));
+	Mesh *planeMesh = new Plane();
+
+	SceneElement *sceneEl3 = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));
+	sceneEl3->setMaterial(materialCubemap.get());
+	sceneEl3->setMesh(cubeMesh);
+	sceneEl3->setCubemap(true);
+	scene->addObject(sceneEl3);
+
+	/*SceneElement *sceneEl = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));// , glm::vec3(1.0f, 0.5f, 0.31f));
+	
 	sceneEl->setMaterial(material.get());
 	sceneEl->setMesh(cubeMesh);
-	scene->addObject(sceneEl);
+	scene->addObject(sceneEl);*/
+	SceneElement *sceneEl2 = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));
+	sceneEl2->setMaterial(material.get());
+	sceneEl2->setMesh(planeMesh);
+	scene->addObject(sceneEl2);
 
-	//renderer.addModel("./Ressources/Model/Sylvanas/Sylvanas.obj", glm::vec3(0.0f, 0.0f, 0.0f));
-	//renderer.addModel("./Ressources/Model/sebulbapod/sebulbapod2.3ds", glm::vec3(0.0f, 0.0f, 0.0f));
+	
+
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 	glm::vec3 lightDir(-0.2f, -1.0f, -0.2);
 	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);

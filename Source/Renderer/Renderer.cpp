@@ -35,23 +35,22 @@ void Renderer::update(Scene *scene)
 		//TODO Be sure that the material exit (default)
 		
 		
-		glm::mat4 model;
-		model = glm::rotate(model, glm::radians(elements->getRotate()), glm::vec3(1.0f, 0.0f, 0.0f)); //Need to improve, Axis? Quaternion.?
-		model = glm::translate(model, elements->getPos());
-
-		model = glm::scale(model, elements->getSize());
-		/*glm::mat4 inverseModel;
-		glm::mat4 view;
-		glm::mat4 projection;*/
-		elements->getMaterial()->getShader()->setMat4("model", model);
-		/*view = glm::translate(view, _camera->getPos());
-		inverseModel = glm::inverse(model);
-		//this->_shader->setMat4("inverseModel", inverseModel);*/
 		
-		elements->getMaterial()->getShader()->setVec3("viewPos", _camera->getPos());
-		elements->getMaterial()->getShader()->setMat4("view", _camera->viewMatrix());
+		if (elements->isCubemap())
+			elements->getMaterial()->getShader()->setMat4("view", glm::mat4(glm::mat3(_camera->viewMatrix())));
+		else
+		{
+			
+			glm::mat4 model;
+			model = glm::rotate(model, glm::radians(elements->getRotate()), glm::vec3(1.0f, 0.0f, 0.0f)); //Need to improve, Axis? Quaternion.?
+			model = glm::translate(model, elements->getPos());
+			model = glm::scale(model, elements->getSize());
+			elements->getMaterial()->getShader()->setMat4("model", model);
+			elements->getMaterial()->getShader()->setVec3("viewPos", _camera->getPos());
+			elements->getMaterial()->getShader()->setMat4("view", _camera->viewMatrix());
+		}
 		elements->getMaterial()->getShader()->setMat4("projection", _camera->projectionMatrix());
-		elements->getMaterial()->preRender();
+		
 		glBindVertexArray(0); //Needed ?
 
 	}
@@ -59,13 +58,18 @@ void Renderer::update(Scene *scene)
 #include <iostream>
 void Renderer::draw(Scene *scene)
 {
+
 	scene->preRender();
 	for (auto elements : scene->getSceneElements())
 	{
-	glBindVertexArray(elements->getMesh()->_vao);
-	//
-	//std::cerr << elements->getMesh()->getVerticesSize() << std::endl;
+		if (elements->isCubemap())
+			glDepthMask(GL_FALSE);
+		elements->getMaterial()->getShader()->use();
+		glBindVertexArray(elements->getMesh()->_vao);
+		elements->getMaterial()->preRender();
 	glDrawArrays(GL_TRIANGLES, 0, elements->getMesh()->getVerticesSize());
+		if (elements->isCubemap())
+			glDepthMask(GL_TRUE);
 	glBindVertexArray(0);
 	}
 }

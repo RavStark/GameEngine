@@ -19,6 +19,7 @@ void Material::preRender()
 {
 	if (_shader)
 	{
+		_shader->setInt("skybox", 0);
 		if (_texture)
 		{
 			_shader->setInt("hasTexture", 1);

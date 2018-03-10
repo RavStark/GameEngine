@@ -2,6 +2,9 @@
 
 #define GLEW_STATIC
 #include <GL/glew.h>
+#include <vector>
+
+typedef std::vector<std::pair<char*, std::pair<int, int>>> cubemapVec;
 
 class Texture
 {
@@ -26,7 +29,19 @@ public:
 		//GL_REPEAT
 		//GL_NEAREST
 		//GL_LINEAR
+	virtual void generate(GLuint width, GLuint height, const unsigned char *data, int idx) { } //get error?
 	void generate(GLuint width, GLuint height, const unsigned char *data, GLboolean mipmaps = GL_FALSE);
-	void bind(GLbyte unit = -1) const;
+	virtual void bind(GLbyte unit = -1) const;
+
+};
+
+class CubemapTexture : public Texture
+{
+	
+public:
+	CubemapTexture();
+	~CubemapTexture();
+	virtual void generate(GLuint width, GLuint height, const unsigned char *data, int idx);
+	virtual void bind(GLbyte unit = -1) const;
 
 };

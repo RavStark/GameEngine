@@ -30,6 +30,9 @@ public:
 	Material *getMaterial() const;
 	void setMesh(Mesh*);
 	Mesh* getMesh();
+
+	void setCubemap(bool state) { _cubemap = state; }
+	bool isCubemap() const { return _cubemap; }
 	
 protected:
 
@@ -40,4 +43,6 @@ protected:
 	glm::vec3 _size;
 	glm::vec3 _color;
 	float _rotate;
+
+	bool _cubemap = false;
 };

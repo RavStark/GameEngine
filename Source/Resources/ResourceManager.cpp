@@ -72,6 +72,44 @@ Texture *ResourceManager::loadTexture(const std::string &name, const char* textu
 	_textureList.insert(std::make_pair(name, texture));
 	return texture;
 }
+
+/* Cubemap */
+Texture *ResourceManager::loadCubemap(const std::string &name,  std::vector< std::string> &textureSources, bool alpha)
+{
+	// first check if texture has been loader already, if so; return earlier loaded texture
+	
+	auto it = _textureList.find(name);
+	if (it != _textureList.end())
+		return it->second;
+
+	Texture *texture = new CubemapTexture();
+	// Generate texture from file
+	if (alpha)
+	{
+		texture->InternalFormat = GL_RGBA;
+		texture->ImageFormat = GL_RGBA;
+	}
+	// Load image
+	int width, height;
+	cubemapVec cubemapImages;
+	int idx = 0;
+	for (auto src : textureSources)
+	{
+		unsigned char* image = SOIL_load_image(src.c_str(), &width, &height, 0, texture->ImageFormat == GL_RGBA ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB);
+		if (image == 0)
+		{
+			std::cerr << "TEXTUREMANAGER::LOADNEWTEXTURE::FAILED " << src.c_str() << std::endl;
+			return nullptr;
+		}
+		texture->generate(width, height, image, idx++);
+		// And finally free image data
+		SOIL_free_image_data(image);
+	}
+	// Store and return
+	_textureList.insert(std::make_pair(name, texture));
+	return texture;
+}
+
 Texture *ResourceManager::getTexture(const std::string &name) const
 {
 	auto it = _textureList.find(name);

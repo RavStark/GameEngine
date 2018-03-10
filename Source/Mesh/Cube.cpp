@@ -15,7 +15,53 @@ Cube::Cube()
 {
 	GLuint VBO;
 	//vertices for triangles
-	_vertices = std::vector<glm::vec3>{
+
+	_vertices = std::vector<glm::vec3> {
+		// positions          
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f)
+	};
+
+	/*_vertices = std::vector<glm::vec3>{
 		// positions          // normals           // texture coords
 		// Back Face
 		glm::vec3(-0.5f, -0.5f, -0.5f),
@@ -61,8 +107,8 @@ Cube::Cube()
 		glm::vec3(0.5f,  0.5f,  0.5f),
 		glm::vec3(-0.5f,  0.5f, -0.5f),
 		glm::vec3(-0.5f,  0.5f,  0.5f)
-	};
-	/*
+	};*/
+	
 	_normals = std::vector<glm::vec3>{
 		glm::vec3(0.0f,  0.0f, -1.0f),
 		glm::vec3(0.0f,  0.0f, -1.0f),
@@ -153,7 +199,7 @@ Cube::Cube()
 		glm::vec2(1.0f,  0.0f),
 		glm::vec2(0.0f,  1.0f),
 		glm::vec2(0.0f,  0.0f)
-	};*/
+	};
 	initRenderData();
 	/*glGenVertexArrays(1, &this->_vao);
 	glGenBuffers(1, &VBO);

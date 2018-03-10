@@ -19,6 +19,7 @@ LightsManager::~LightsManager()
 void LightsManager::preRender(Shader *shader) const
 {
 	//first test, use only the first point light
+	shader->use();
 	if (!_pointLights.empty())
 	{
 		shader->setVec3("light.position", (*_pointLights.begin())->getPos());

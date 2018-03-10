@@ -21,7 +21,6 @@ void Texture::generate(GLuint width, GLuint height, const unsigned char *data, G
 	GLuint texture;
 	glBindTexture(GL_TEXTURE_2D, _id); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
 											// Set the texture wrapping parameters
-	std::cerr << _id << std::endl;
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, WrapS);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, WrapT);
 	// Set texture filtering parameters
@@ -42,4 +41,39 @@ void Texture::bind(GLbyte unit) const
 	if (unit >= 0)
 		glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, _id);
+}
+
+CubemapTexture::CubemapTexture()
+	:Texture()
+{
+}
+
+CubemapTexture::~CubemapTexture()
+{
+
+}
+
+void CubemapTexture::generate(GLuint width, GLuint height, const unsigned char *data, int idx)
+{
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, _id);
+
+
+
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + idx,
+		0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	if (idx == 5)//6 faces tex2D for cubemap
+	{
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+}
+
+void CubemapTexture::bind(GLbyte unit) const
+{
+	glBindTexture(GL_TEXTURE_CUBE_MAP, _id);
 }

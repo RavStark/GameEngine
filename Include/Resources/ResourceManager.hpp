@@ -27,6 +27,7 @@ public:
 	/* Texture2D*/
 
 	Texture *loadTexture(const std::string &name, const char* textureSource, bool alpha);
+	Texture *loadCubemap(const std::string &name,  std::vector<std::string> &textureSource, bool alpha);
 	Texture *getTexture(const std::string &name) const;
 
 	/* RessourceManager singleton */
