@@ -10,9 +10,11 @@
 #include "Resources/Texture.hpp"
 #include "Resources/ResourceManager.hpp"
 #include "Camera/CameraFps.hpp"
+#include "Mesh/MeshFactory.hpp"
 #include "Mesh/Mesh.hpp"
 #include "Mesh/Cube.hpp"
 #include "Mesh/Plane.hpp"
+#include "Mesh/Cubemap.hpp"
 #include "Renderer/LightsManager.hpp"
 #include "Renderer/Lights/PointLight.hpp"
 #include "Renderer/Objects/Material.hpp"
@@ -201,12 +203,6 @@ int main(int , char *[])
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	
-/*	GLuint indexes[] = {
-		0,1,2, //first triangle
-		3,4,5 //second triangle
-	};*/
-
 	GLfloat texCoords[] = {
 		0.0f, 0.0f,  // Lower-left corner  
 		1.0f, 0.0f,  // Lower-right corner
@@ -232,7 +228,7 @@ int main(int , char *[])
 	camera = std::make_shared<CameraFps>(glm::vec3(0.0f, 0.0f, 3.0f), screenWidth, screenHeight);
 	
 	/*Skybox*/
-	std::vector< std::string> skyboxpath{
+	std::vector<const char*> skyboxpath{
 		"./Resources/Textures/skybox/right.jpg",
 		"./Resources/Textures/skybox/left.jpg",
 		"./Resources/Textures/skybox/top.jpg",
@@ -251,7 +247,7 @@ int main(int , char *[])
 	ResourceManager::getInstance()->loadShader("sphere", "./Shaders/sphere.vs", "./Shaders/sphere.frag");
 	ResourceManager::getInstance()->loadShader("cubemap", "./Shaders/skybox.vs", "./Shaders/skybox.frag");
 	Renderer renderer(camera);
-	Scene *scene = new Scene(camera);
+	Scene *scene = new Scene();
 
 
 	/* LIGHT */
@@ -259,11 +255,9 @@ int main(int , char *[])
 	{
 		auto pointLight = std::make_shared<PointLight>(lightPos);
 		scene->addLight(pointLight);
-		/*renderer.addObject(lightPos, glm::vec3(0.2));
-		renderer.addLight(pointLight);*/
 	}
 
-	/*create object*/
+	/*create material*/
 	auto material = std::make_shared<Material>();
 	material->setShader(ResourceManager::getInstance()->getShader("color"));
 	material->setColor(glm::vec3(0.5));
@@ -286,26 +280,27 @@ int main(int , char *[])
 	materialCubemap->setTexture(ResourceManager::getInstance()->getTexture("skyboxpath"));
 
 	
-	Mesh *cubeMesh = new Cube();
-	Mesh *planeMesh = new Plane();
+	Mesh *cubeMesh = MeshFactory::createMesh<Cube>();
+	Mesh *planeMesh = MeshFactory::createMesh<Plane>();
+	Mesh *cubemapMesh = MeshFactory::createMesh<Cubemap>();
+	
 
-	SceneElement *sceneEl3 = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));
-	sceneEl3->setMaterial(materialCubemap.get());
-	sceneEl3->setMesh(cubeMesh);
-	sceneEl3->setCubemap(true);
-	scene->addObject(sceneEl3);
-
-	/*SceneElement *sceneEl = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));// , glm::vec3(1.0f, 0.5f, 0.31f));
+	SceneElement *sceneEl = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));// , glm::vec3(1.0f, 0.5f, 0.31f));
 	
 	sceneEl->setMaterial(material.get());
 	sceneEl->setMesh(cubeMesh);
-	scene->addObject(sceneEl);*/
-	SceneElement *sceneEl2 = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));
+	scene->addObject(sceneEl);
+
+	SceneElement *sceneEl2 = new SceneElement(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(1.0));
 	sceneEl2->setMaterial(material.get());
 	sceneEl2->setMesh(planeMesh);
 	scene->addObject(sceneEl2);
 
-	
+	SceneElement *sceneEl3 = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));
+	sceneEl3->setMaterial(materialCubemap.get());
+	sceneEl3->setMesh(cubemapMesh);
+	sceneEl3->setCubemap(true);
+	scene->addObject(sceneEl3);
 
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 	glm::vec3 lightDir(-0.2f, -1.0f, -0.2);
@@ -333,16 +328,24 @@ int main(int , char *[])
 			fps = 0;
 		}
 		glfwPollEvents();
-		do_mouvement(camera);
-		renderer.update(scene);
 		glClearColor(0.f, 0.f, 0.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		do_mouvement(camera);
+		renderer.update(scene);
+		
 		renderer.draw(scene);
 		
 		glfwSwapBuffers(window);
 		
 	}
+	/* shut down
+		TODO: Need startup and shutdown methods	
+	*/
+	for (auto element : scene->getSceneElements())
+		delete element;
 	delete scene;
+	delete cubeMesh;
+	delete planeMesh;
 	glfwTerminate();
 
 	return 0;

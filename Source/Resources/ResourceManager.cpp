@@ -74,7 +74,7 @@ Texture *ResourceManager::loadTexture(const std::string &name, const char* textu
 }
 
 /* Cubemap */
-Texture *ResourceManager::loadCubemap(const std::string &name,  std::vector< std::string> &textureSources, bool alpha)
+Texture *ResourceManager::loadCubemap(const std::string &name, const std::vector<const char*> &textureSources, bool alpha)
 {
 	// first check if texture has been loader already, if so; return earlier loaded texture
 	
@@ -95,10 +95,10 @@ Texture *ResourceManager::loadCubemap(const std::string &name,  std::vector< std
 	int idx = 0;
 	for (auto src : textureSources)
 	{
-		unsigned char* image = SOIL_load_image(src.c_str(), &width, &height, 0, texture->ImageFormat == GL_RGBA ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB);
+		unsigned char* image = SOIL_load_image(src, &width, &height, 0, texture->ImageFormat == GL_RGBA ? SOIL_LOAD_RGBA : SOIL_LOAD_RGB);
 		if (image == 0)
 		{
-			std::cerr << "TEXTUREMANAGER::LOADNEWTEXTURE::FAILED " << src.c_str() << std::endl;
+			std::cerr << "TEXTUREMANAGER::LOADNEWTEXTURE::FAILED " << src << std::endl;
 			return nullptr;
 		}
 		texture->generate(width, height, image, idx++);

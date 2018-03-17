@@ -10,6 +10,7 @@ public:
 	~Mesh();
 
 	size_t getVerticesSize() { return _vertices.size(); }
+
 	// Render data 
 	unsigned int  _vao, _vbo, _ebo;
 protected:
@@ -24,6 +25,4 @@ protected:
 	std::vector<glm::vec3> _normals;
 	// Texture coords
 	std::vector<glm::vec2> _UV;
-	
-
 };

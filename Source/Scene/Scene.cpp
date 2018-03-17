@@ -1,6 +1,5 @@
 #include "Scene/Scene.hpp"
 #include "Scene/SceneElement.hpp"
-#include "Camera/Camera.hpp"
 #include "Resources/ResourceManager.hpp"
 #include "Renderer/LightsManager.hpp"
 #include <iostream>
@@ -10,8 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-Scene::Scene(const std::shared_ptr<Camera> &camera)
-	: _camera(camera)
+Scene::Scene()
 {
 	_lightsManager = std::make_shared<LightsManager>();
 }

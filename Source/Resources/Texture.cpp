@@ -18,7 +18,6 @@ void Texture::generate(GLuint width, GLuint height, const unsigned char *data, G
 {
 	this->_width = width;
 	this->_height = height;
-	GLuint texture;
 	glBindTexture(GL_TEXTURE_2D, _id); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
 											// Set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, WrapS);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
@@ -73,7 +72,8 @@ void CubemapTexture::generate(GLuint width, GLuint height, const unsigned char *
 	}
 }
 
-void CubemapTexture::bind(GLbyte unit) const
+void CubemapTexture::bind(GLbyte) const
 {
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, _id);
 }

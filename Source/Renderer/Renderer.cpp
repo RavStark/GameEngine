@@ -63,13 +63,14 @@ void Renderer::draw(Scene *scene)
 	for (auto elements : scene->getSceneElements())
 	{
 		if (elements->isCubemap())
-			glDepthMask(GL_FALSE);
+			glDepthFunc(GL_LEQUAL);
 		elements->getMaterial()->getShader()->use();
 		glBindVertexArray(elements->getMesh()->_vao);
 		elements->getMaterial()->preRender();
-	glDrawArrays(GL_TRIANGLES, 0, elements->getMesh()->getVerticesSize());
+		glDrawArrays(GL_TRIANGLES, 0, elements->getMesh()->getVerticesSize());
 		if (elements->isCubemap())
-			glDepthMask(GL_TRUE);
-	glBindVertexArray(0);
+			glDepthFunc(GL_LESS);
+		glBindVertexArray(0);
+		
 	}
 }

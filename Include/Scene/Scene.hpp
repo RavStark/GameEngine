@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 class SceneElement;
-class Camera;
 class PointLight;
 class DirectionLight;
 class LightsManager;
@@ -13,7 +12,7 @@ class LightsManager;
 class Scene
 {
 public:
-	explicit Scene(const std::shared_ptr<Camera> &camera);
+	explicit Scene();
 	~Scene();
 
 	void preRender();
@@ -24,7 +23,6 @@ public:
 	//TODO: Get elements from a certain id, type?
 	std::list<SceneElement*> getSceneElements() const;
 private:
-	std::shared_ptr<Camera> _camera;
 	std::shared_ptr<LightsManager> _lightsManager;
 
 	std::list<SceneElement*> _sceneElements;
