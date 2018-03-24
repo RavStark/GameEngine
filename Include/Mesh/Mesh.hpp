@@ -10,6 +10,7 @@ public:
 	~Mesh();
 
 	size_t getVerticesSize() { return _vertices.size(); }
+	size_t getIndicesSize() { return _indices.size(); }
 
 	// Render data 
 	unsigned int  _vao, _vbo, _ebo;
@@ -20,7 +21,7 @@ protected:
 	// Mesh's vertices
 	std::vector<glm::vec3> _vertices;
 	// indices between points
-	std::vector<glm::vec3> _indices;
+	std::vector<unsigned int> _indices;
 
 	std::vector<glm::vec3> _normals;
 	// Texture coords

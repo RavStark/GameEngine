@@ -67,7 +67,13 @@ void Renderer::draw(Scene *scene)
 		elements->getMaterial()->getShader()->use();
 		glBindVertexArray(elements->getMesh()->_vao);
 		elements->getMaterial()->preRender();
-		glDrawArrays(GL_TRIANGLES, 0, elements->getMesh()->getVerticesSize());
+		if (elements->getMesh()->getIndicesSize() != 0)
+		{
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elements->getMesh()->_ebo);
+			glDrawElements(GL_TRIANGLES, elements->getMesh()->getIndicesSize(), GL_UNSIGNED_INT, 0);
+		}
+		else
+			glDrawArrays(GL_TRIANGLES, 0, elements->getMesh()->getVerticesSize());
 		if (elements->isCubemap())
 			glDepthFunc(GL_LESS);
 		glBindVertexArray(0);
