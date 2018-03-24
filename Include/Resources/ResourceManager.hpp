@@ -30,6 +30,9 @@ public:
 	Texture *loadCubemap(const std::string &name,  const std::vector<const char*> &textureSource, bool alpha);
 	Texture *getTexture(const std::string &name) const;
 
+	//Load data from Image source but doesn't free the data 
+	unsigned char* loadImage(const char* source, int &width, int &height);
+	void freeImage(unsigned char* data) const;
 	/* RessourceManager singleton */
 	static std::shared_ptr<ResourceManager> getInstance();
 private:

@@ -118,6 +118,16 @@ Texture *ResourceManager::getTexture(const std::string &name) const
 	return nullptr;
 }
 
+unsigned char* ResourceManager::loadImage(const char* source, int &width, int &height)
+{
+	return SOIL_load_image(source, &width, &height, 0, SOIL_LOAD_L);
+}
+
+void ResourceManager::freeImage(unsigned char* data) const
+{
+	SOIL_free_image_data(data);
+}
+
 std::shared_ptr<ResourceManager> ResourceManager::getInstance()
 {
 	if (_instance == nullptr)

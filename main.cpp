@@ -13,6 +13,7 @@
 #include "Mesh/MeshFactory.hpp"
 #include "Mesh/Mesh.hpp"
 #include "Mesh/Cube.hpp"
+#include "Mesh/Terrain.hpp"
 #include "Mesh/Plane.hpp"
 #include "Mesh/Cubemap.hpp"
 #include "Renderer/LightsManager.hpp"
@@ -239,12 +240,13 @@ int main(int , char *[])
 	/*Textures*/
 	ResourceManager::getInstance()->loadTexture("container", "./Resources/Textures/container.jpg", false);
 	ResourceManager::getInstance()->loadTexture("container2_specular", "./Resources/Textures/container2_specular.png", false);
+	ResourceManager::getInstance()->loadTexture("grass", "./Resources/Textures/grass.png", false);
 	//textureManager->loadNewTexture2D("matrix", "./Ressources/Textures/matrix.jpg", GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
 	Shader * multipleLightingShader = new Shader("./Shaders/MultipleLighting.vs", "./Shaders/MultipleLighting.frag");
 
 	ResourceManager::getInstance()->loadShader("color", "./Shaders/Color.vs", "./Shaders/Color.frag");
-	ResourceManager::getInstance()->loadShader("sphere", "./Shaders/sphere.vs", "./Shaders/sphere.frag");
+	ResourceManager::getInstance()->loadShader("sphere", "./Shaders/Sphere.vs", "./Shaders/Texture.frag");
 	ResourceManager::getInstance()->loadShader("cubemap", "./Shaders/skybox.vs", "./Shaders/skybox.frag");
 	Renderer renderer(camera);
 	Scene *scene = new Scene();
@@ -265,7 +267,7 @@ int main(int , char *[])
 	material->setDiffuse(glm::vec3(1.0f, 0.5f, 0.31f));
 	material->setSpecular(glm::vec3(0.5));
 	material->setShininess(0.5);
-	material->setTexture(ResourceManager::getInstance()->getTexture("container"));
+	material->setTexture(ResourceManager::getInstance()->getTexture("grass"));
 
 	auto material2 = std::make_shared<Material>();
 	material2->setShader(ResourceManager::getInstance()->getShader("sphere"));
@@ -274,6 +276,7 @@ int main(int , char *[])
 	material2->setDiffuse(glm::vec3(1.0f, 0.5f, 0.31f));
 	material2->setSpecular(glm::vec3(0.5));
 	material2->setShininess(0.5);
+	material2->setTexture(ResourceManager::getInstance()->getTexture("grass"));
 
 	auto materialCubemap = std::make_shared<Material>();
 	materialCubemap->setShader(ResourceManager::getInstance()->getShader("cubemap"));
@@ -283,7 +286,7 @@ int main(int , char *[])
 	Mesh *cubeMesh = MeshFactory::createMesh<Cube>();
 	Mesh *planeMesh = MeshFactory::createMesh<Plane>();
 	Mesh *cubemapMesh = MeshFactory::createMesh<Cubemap>();
-	
+	Mesh *terrainMesh = MeshFactory::createMesh<Terrain>("./Resources/Heightmap/terrain-heightmap-01.png");
 
 	SceneElement *sceneEl = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));// , glm::vec3(1.0f, 0.5f, 0.31f));
 	
@@ -295,6 +298,11 @@ int main(int , char *[])
 	sceneEl2->setMaterial(material.get());
 	sceneEl2->setMesh(planeMesh);
 	scene->addObject(sceneEl2);
+
+	SceneElement *sceneEl4 = new SceneElement(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(1.0));
+	sceneEl4->setMaterial(material.get());
+	sceneEl4->setMesh(terrainMesh);
+	scene->addObject(sceneEl4);
 
 	SceneElement *sceneEl3 = new SceneElement(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0));
 	sceneEl3->setMaterial(materialCubemap.get());
