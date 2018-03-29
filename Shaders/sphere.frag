@@ -2,7 +2,13 @@
 
 out vec4 FragColor;
 
-
+in float height;
 void main(){
-	FragColor = vec4 (1.0, 1.0, 0.0, 1.0);
+	float color;
+	color = abs(height) / 60.f;
+	/*else
+	{
+		color = height / 100.f;
+	}*/
+	FragColor = vec4 (0.0, color, 0.0, 1.0);
 }
